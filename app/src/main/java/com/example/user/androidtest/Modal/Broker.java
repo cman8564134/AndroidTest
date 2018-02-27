@@ -5,7 +5,7 @@ package com.example.user.androidtest.Modal;
  */
 
 public class Broker extends Person {
-    public Broker(String id, String firstname, String lastname) {
-        super(id, firstname, lastname, "Broker");
+    public Broker(String id, String firstname, String lastname,String phoneno) {
+        super(id, firstname, lastname, "Broker",phoneno);
     }
 }

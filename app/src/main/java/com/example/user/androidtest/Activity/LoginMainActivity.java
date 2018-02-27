@@ -23,11 +23,29 @@ public class LoginMainActivity extends AppCompatActivity implements LoginView, V
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_main);
 
+        initViews();
+        initViewModal();
 
+    }
+
+
+    private void initViews()
+    {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        username = (EditText) findViewById(R.id.editText);
-        password = (EditText) findViewById(R.id.editText2);
-        findViewById(R.id.button).setOnClickListener(this);
+        username = (EditText) findViewById(R.id.loginText);
+        password = (EditText) findViewById(R.id.passText);
+        findViewById(R.id.loginButton).setOnClickListener(this);
+
+    }
+
+    public void signUp()
+    {
+        //bring up sign up page
+
+    }
+
+    private void initViewModal()
+    {
 
     }
 

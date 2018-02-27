@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">AndroidTest</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="user_id">User ID</string>
+    <string name="password">Password</string>
+    <string name="userType">User Type:</string>
+    <string name="FirstName">First Name</string>
+    <string name="lastName">Last Name</string>
 </resources>

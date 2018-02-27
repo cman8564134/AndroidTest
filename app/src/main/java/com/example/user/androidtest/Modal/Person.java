@@ -5,26 +5,18 @@ package com.example.user.androidtest.Modal;
  */
 
 public class Person {
-    protected String ID;
-    protected String firstName;
-    protected String lastName;
-    protected  String Type;
+    private String firstName;
+    private String lastName;
+    private final String Type;
+    private String phoneNo;
 
-    public Person(String id, String firstname, String lastname, String type)
+    public Person(String id, String firstname, String lastname, String type,String phoneNo)
     {
         this.firstName=firstname;
         this.lastName=lastname;
-        this.ID=id;
         this.Type=type;
+        this.phoneNo=phoneNo;
 
-    }
-
-    public String getID() {
-        return ID;
-    }
-
-    public void setID(String ID) {
-        this.ID = ID;
     }
 
     public String getFirstName() {
@@ -47,7 +39,11 @@ public class Person {
         return Type;
     }
 
-    public void setType(String type) {
-        Type = type;
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
     }
 }

@@ -7,7 +7,7 @@
     tools:context="com.example.user.androidtest.Activity.LoginMainActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Login/SignUP"
@@ -15,7 +15,7 @@
         tools:layout_editor_absoluteY="231dp" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/loginText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -23,23 +23,23 @@
         android:layout_marginTop="8dp"
         android:drawableLeft="@drawable/ic_action_account"
         android:ems="10"
-        android:hint="User ID"
+        android:hint="@string/user_id"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/editText2"
+        app:layout_constraintBottom_toTopOf="@+id/passText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.487" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/passText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="64dp"
         android:drawableLeft="@drawable/ic_action_key"
         android:ems="10"
-        android:hint="Password"
+        android:hint="@string/password"
         android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/loginButton"
         tools:layout_editor_absoluteX="73dp" />
 
     <ProgressBar
@@ -48,7 +48,7 @@
         android:layout_width="42dp"
         android:layout_height="19dp"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/loginButton"
         tools:layout_editor_absoluteX="181dp" />
 
 </android.support.constraint.ConstraintLayout>

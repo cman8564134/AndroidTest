@@ -8,8 +8,8 @@ public class Private extends Person {
 
 
 
-    public Private(String id, String firstname, String lastname) {
-        super(id, firstname, lastname,"Private");
+    public Private(String id, String firstname, String lastname, String phoneno) {
+        super(id, firstname, lastname,"Private",phoneno);
     }
 
 

@@ -7,8 +7,8 @@ package com.example.user.androidtest.Modal;
 public class Dealer extends Person {
 
 
-    public Dealer(String id, String firstname, String lastname,String type) {
-        super(id, firstname, lastname,"Dealer");
+    public Dealer(String id, String firstname, String lastname,String type,String phoneno) {
+        super(id, firstname, lastname,"Dealer",phoneno);
     }
 
 }

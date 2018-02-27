@@ -6,4 +6,57 @@
     android:layout_height="match_parent"
     tools:context="com.example.user.androidtest.Activity.HomeActivity">
 
+    <TextView
+        android:id="@+id/firstNameText"
+        android:layout_width="220dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="92dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/FirstName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/lastNameText"
+        android:layout_width="223dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/lastName"
+        app:layout_constraintTop_toBottomOf="@+id/firstNameText"
+        tools:layout_editor_absoluteX="72dp" />
+
+    <TextView
+        android:id="@+id/phoneNumberText"
+        android:layout_width="227dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/phone_number"
+        app:layout_constraintTop_toBottomOf="@+id/lastNameText"
+        tools:layout_editor_absoluteX="72dp" />
+
+    <Button
+        android:id="@+id/editPhoneNumberButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="Edit Phone Number"
+        app:layout_constraintTop_toBottomOf="@+id/phoneNumberText"
+        tools:layout_editor_absoluteX="104dp" />
+
+    <Button
+        android:id="@+id/userTypeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="User Type"
+        app:layout_constraintTop_toBottomOf="@+id/editPhoneNumberButton"
+        tools:layout_editor_absoluteX="138dp" />
+
+    <Button
+        android:id="@+id/LogoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="447dp" />
 </android.support.constraint.ConstraintLayout>
