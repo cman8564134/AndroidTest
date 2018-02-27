@@ -12,7 +12,7 @@ import io.realm.RealmQuery;
  * Created by User on 26/2/2018.
  */
 
-public class LoginViewModal extends BaseObservable implements LoginView {
+public class LoginViewModal implements LoginView {
 
     Account account;
     Realm realm =Realm.getDefaultInstance();

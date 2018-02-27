@@ -18,6 +18,10 @@ public class Account extends RealmObject{
     @Required
     private Person user;
 
+    public Account()
+    {
+
+    }
 
     public Account(String id, String password)
     {
