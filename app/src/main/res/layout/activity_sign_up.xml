@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/SignUpParentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.user.androidtest.Activity.SignUpActivity">
@@ -11,15 +11,17 @@
         android:id="@+id/PhoneNumberText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:drawableLeft="@drawable/ic_action_phone"
         android:ems="10"
         android:hint="@string/phone_number"
         android:inputType="phone"
+        app:layout_constraintBottom_toTopOf="@+id/SignUpButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.411"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="279dp" />
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
         android:id="@+id/userTypeSpinner"
@@ -37,31 +39,56 @@
         android:id="@+id/textView"
         android:layout_width="70dp"
         android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/userType"
+        app:layout_constraintBottom_toTopOf="@+id/PhoneNumberText"
         app:layout_constraintEnd_toStartOf="@+id/userTypeSpinner"
-        tools:layout_editor_absoluteY="192dp" />
+        app:layout_constraintHorizontal_bias="0.424"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/LastNameText" />
 
     <EditText
         android:id="@+id/FirstNameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="96dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="36dp"
+        android:drawableLeft="@drawable/ic_action_letter"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="@string/FirstName"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/LastNameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="40dp"
+        android:drawableLeft="@drawable/ic_action_letter"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="@string/lastName"
-        app:layout_constraintTop_toBottomOf="@+id/FirstNameText"
-        tools:layout_editor_absoluteX="71dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/FirstNameText" />
+
+    <Button
+        android:id="@+id/SignUpButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="SignUp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

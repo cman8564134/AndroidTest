@@ -1,6 +1,5 @@
 package com.example.user.androidtest.Modal;
 
-import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -14,19 +13,20 @@ public class Account extends RealmObject{
     @PrimaryKey @Required
     private String ID;
     @Required
-    private String password;
-    @Required
+    private String Password;
     private Person user;
-
-    public Account()
-    {
-
-    }
 
     public Account(String id, String password)
     {
         this.ID=id;
-        this.password=password;
+        this.Password =password;
+    }
+
+    public Account(String id, String password,Person person)
+    {
+        this.ID=id;
+        this.Password =password;
+        this.user=person;
     }
 
     public String getID() {
@@ -43,16 +43,18 @@ public class Account extends RealmObject{
     }
 
     public String getPassword() {
-        return password;
+        return Password;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.Password = password;
     }
 
     public void setUser(Person user) {
         this.user = user;
     }
+
+
 
 
 

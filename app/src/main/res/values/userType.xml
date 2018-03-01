@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="userTypes">
+        <item>Agent</item>
+        <item>Broker</item>
+        <item>Dealer</item>
+        <item>Private</item>
+    </string-array>
+</resources>

@@ -1,31 +1,54 @@
 package com.example.user.androidtest.Activity;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+
 import com.example.user.androidtest.Interface.LoginView;
+import com.example.user.androidtest.Modal.Account;
 import com.example.user.androidtest.R;
 import com.example.user.androidtest.ViewModal.LoginViewModal;
 
-public class LoginMainActivity extends AppCompatActivity implements LoginView, View.OnClickListener{
+public class LoginMainActivity extends AppCompatActivity implements LoginView, View.OnClickListener {
 
     private ProgressBar progressBar;
     private EditText username;
     private EditText password;
     private LoginViewModal loginViewModal;
+    private final String passwordEmptyMessage="Password is empty";
+    private final String usernameEmptyMessage="Email is empty";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //revert to normal theme after done loading
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_main);
 
         initViews();
         initViewModal();
 
+    }
+
+    private void storeToSharedPreference(Account account)
+    {
+        SharedPreferences prefs = getSharedPreferences("UserAccountData", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("username", account.getID());
+        editor.putString("password", account.getPassword());
+        editor.putString("FirstName",account.getUser().getFirstName());
+        editor.putString("LastName",account.getUser().getLastName());
+        editor.putString("PhoneNo",account.getUser().getPhoneNo());
+        editor.putString("Type",account.getUser().getType());
+        editor.commit();
     }
 
 
@@ -38,20 +61,37 @@ public class LoginMainActivity extends AppCompatActivity implements LoginView, V
 
     }
 
-    public void signUp()
-    {
-        //bring up sign up page
 
+    public void startSignUpActivity()
+    {
+        Intent intent = new Intent(this, LoginMainActivity.class);
+        startActivity(intent);
+    }
+
+    private boolean isValidForm()
+    {
+
+        if(username.getText().toString().trim().isEmpty()||password.getText().toString().isEmpty()) {
+            Snackbar.make(findViewById(R.id.LoginParentLayout), "Please Complete The Form!", Snackbar.LENGTH_SHORT);
+            return false;
+        }
+        return true;
     }
 
     private void initViewModal()
     {
 
+        loginViewModal=ViewModelProviders.of(this).get(LoginViewModal.class);
+
     }
 
     @Override
     public void onClick(View v) {
-        loginViewModal.validateLogin(username.getText().toString(), password.getText().toString());
+        showProgress();
+        if(isValidForm())
+            loginViewModal.validateLogin(username.getText().toString().trim(), password.getText().toString());
+        loginViewModal.getAccount();
+        hideProgress();
     }
 
     @Override
@@ -64,20 +104,34 @@ public class LoginMainActivity extends AppCompatActivity implements LoginView, V
         progressBar.setVisibility(View.GONE);
     }
 
-    @Override
-    public void setUsernameError() {
-        username.setError("Email is not valid");
-    }
 
     @Override
-    public void setPasswordError() {
-        password.setError("Password should contain one special character and minimum 8 characters required");
+    public void setError(String inputType, String message)
+    {
+        if(inputType.equals("Username"))
+        {
+            setUsernameError(message);
+        }
+        else if(inputType.equals("Password"))
+        {
+            setPasswordError(message);
+        }
+
     }
 
-    @Override public void navigateToHome() {
+    private void setUsernameError(String message) {
+        username.setError(message);
+    }
+
+    private void setPasswordError(String message) { password.setError(message); }
+
+    @Override
+    public void startHomeActivity() {
         startActivity(new Intent(this, HomeActivity.class));
         finish();
     }
+
+
 
 
 

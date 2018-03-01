@@ -1,10 +1,12 @@
 package com.example.user.androidtest.Modal;
 
+import io.realm.RealmObject;
+
 /**
  * Created by User on 26/2/2018.
  */
 
-public class Person {
+public class Person extends RealmObject{
     private String firstName;
     private String lastName;
     private final String Type;
