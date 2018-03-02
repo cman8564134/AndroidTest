@@ -5,10 +5,12 @@ import android.arch.lifecycle.ViewModel;
 import android.databinding.BaseObservable;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.widget.Switch;
 
 import com.example.user.androidtest.Activity.SignUpActivity;
-import com.example.user.androidtest.Interface.LoginView;
 import com.example.user.androidtest.Modal.Account;
+import com.example.user.androidtest.Modal.Person;
+import com.example.user.androidtest.Modal.UserType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,15 +24,25 @@ import io.realm.RealmQuery;
  * Created by User on 26/2/2018.
  */
 
-public class LoginViewModal extends ViewModel implements LoginView {
 
-    Account account;
-    Realm realm =Realm.getDefaultInstance();
+public class LoginViewModal {
+
+    //implement singleton to ensure data sharing with activities
+    private static LoginViewModal loginViewModal;
+    private Account account;
+    private Realm realm =Realm.getDefaultInstance();
     private final String passwordErrorMessage="Password should contain one special character and minimum 8 characters required";
-    private HashMap<String,String> errorMessages=new HashMap<>();
+    private final String IDErrorMessage="Email is not valid";
+    private HashMap<ErrorType,String> errorMessages=new HashMap<>();
 
-
-
+    private LoginViewModal(){}
+    public static LoginViewModal getInstance()
+    {
+        if (loginViewModal == null) {
+            loginViewModal = new LoginViewModal();
+        }
+        return loginViewModal;
+    }
 
     public void validateLogin(String username,String password)
     {
@@ -40,6 +52,49 @@ public class LoginViewModal extends ViewModel implements LoginView {
             account=new Account(username,password);
             checkDatabase(account);
         }
+    }
+
+    public void Register(String userType,String firstName, String lastName, String phoneNumber)
+    {
+        if(isValidPhoneNumber(phoneNumber))
+        {
+            Person p= createPersonObject(userType,firstName,lastName,phoneNumber);
+
+            if (p!=null) {
+                System.out.println("Account is:"+account);
+                account.setUser(p);
+                registerOrUpdateAccount(account);
+                return;
+            }
+            setError(ErrorType.UserType, "Please choose one of the selected user type");
+
+        }
+
+    }
+
+    public UserType[] getUserType()
+    {
+        return UserType.values();
+    }
+
+
+    private Person createPersonObject(String userType,String firstName,String lastName,String phoneNumber)
+    {
+        Person p;
+        switch(userType)
+        {
+            case "Agent": p= new Person(firstName,lastName,UserType.Agent,phoneNumber);
+            break;
+            case "Broker": p= new Person(firstName,lastName,UserType.Broker,phoneNumber);
+            break;
+            case "Dealer": p= new Person(firstName,lastName,UserType.Dealer,phoneNumber);
+            break;
+            case "Private": p= new Person(firstName,lastName,UserType.Private,phoneNumber);
+            break;
+            default: p= null;
+            break;
+        }
+        return p;
     }
 
     private void checkDatabase(Account acc)
@@ -52,18 +107,16 @@ public class LoginViewModal extends ViewModel implements LoginView {
             //existing ID
             //check password
             if(!specificPerson.getPassword().equals(acc.getPassword())) {
-                setError("Password", "Wrong Password");
+                setError(ErrorType.Password, "Wrong Password");
                 return;
             }
-            //redirect to homepage
-            startHomeActivity();
-
+            account.setUser(specificPerson.getUser());
         }
         else
         {
             //new ID
-
-            //redirect to signUp
+            //the person is still null but we set it to double confirm
+            account.setUser(null);
 
         }
 
@@ -75,12 +128,12 @@ public class LoginViewModal extends ViewModel implements LoginView {
 
         if(!isValidEmail(username))
         {
-            setError("Username","Email is not valid");
+            setError(ErrorType.Username,IDErrorMessage);
             return false;
         }
         else if (!isValidPassword(password))
         {
-            setError("Password",passwordErrorMessage);
+            setError(ErrorType.Password,passwordErrorMessage);
             return false;
         }
         return true;
@@ -114,32 +167,56 @@ public class LoginViewModal extends ViewModel implements LoginView {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
-    @Override
-    public void showProgress() {
-        //send back to view
 
-    }
-
-    @Override
-    public void hideProgress() {
-        //send back to view
-
-    }
-
-    @Override
-    public void setError(String type, String message) {
-        //send back to view
+    private void setError(ErrorType type, String message) {
+        errorMessages.put(type,message);
 
     }
 
 
-    @Override
-    public void startHomeActivity() {
-
+    public HashMap<ErrorType, String> getErrorMessages() {
+        return errorMessages;
     }
+
 
     public Account getAccount()
     {
         return this.account;
+    }
+
+    private boolean isValidPhoneNumber(String phonenumber)
+    {
+        if(!Patterns.PHONE.matcher(phonenumber).matches()||phonenumber.length()!=10||!phonenumber.startsWith("01")) {
+            setError(ErrorType.PhoneNo,"Phone Number Not valid");
+            return false;
+        }
+
+
+        return true;
+
+    }
+
+    public void updatePhoneNumber(String phoneNo)
+    {
+        if(isValidPhoneNumber(phoneNo))
+        {
+
+            //actually this function can be used as update account details
+            account.setUser(new Person(account.getUser().getFirstName(),account.getUser().getLastName(),account.getUser().getType(),phoneNo));
+            registerOrUpdateAccount(account);
+        }
+
+    }
+
+    private void registerOrUpdateAccount(final Account account)
+    {
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealmOrUpdate(account);
+            }
+        });
+
     }
 }

@@ -11,12 +11,15 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 
-import com.example.user.androidtest.Interface.LoginView;
 import com.example.user.androidtest.Modal.Account;
 import com.example.user.androidtest.R;
+import com.example.user.androidtest.ViewModal.ErrorType;
 import com.example.user.androidtest.ViewModal.LoginViewModal;
 
-public class LoginMainActivity extends AppCompatActivity implements LoginView, View.OnClickListener {
+import java.util.HashMap;
+import java.util.Map;
+
+public class LoginMainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ProgressBar progressBar;
     private EditText username;
@@ -44,10 +47,6 @@ public class LoginMainActivity extends AppCompatActivity implements LoginView, V
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("username", account.getID());
         editor.putString("password", account.getPassword());
-        editor.putString("FirstName",account.getUser().getFirstName());
-        editor.putString("LastName",account.getUser().getLastName());
-        editor.putString("PhoneNo",account.getUser().getPhoneNo());
-        editor.putString("Type",account.getUser().getType());
         editor.commit();
     }
 
@@ -64,7 +63,7 @@ public class LoginMainActivity extends AppCompatActivity implements LoginView, V
 
     public void startSignUpActivity()
     {
-        Intent intent = new Intent(this, LoginMainActivity.class);
+        Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
 
@@ -72,7 +71,7 @@ public class LoginMainActivity extends AppCompatActivity implements LoginView, V
     {
 
         if(username.getText().toString().trim().isEmpty()||password.getText().toString().isEmpty()) {
-            Snackbar.make(findViewById(R.id.LoginParentLayout), "Please Complete The Form!", Snackbar.LENGTH_SHORT);
+            Snackbar.make(findViewById(R.id.LoginParentLayout), "Please Complete The Form!", Snackbar.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -81,38 +80,54 @@ public class LoginMainActivity extends AppCompatActivity implements LoginView, V
     private void initViewModal()
     {
 
-        loginViewModal=ViewModelProviders.of(this).get(LoginViewModal.class);
+        loginViewModal=LoginViewModal.getInstance();
 
     }
 
     @Override
     public void onClick(View v) {
         showProgress();
-        if(isValidForm())
+        if(isValidForm()) {
             loginViewModal.validateLogin(username.getText().toString().trim(), password.getText().toString());
-        loginViewModal.getAccount();
+            if(isErrorFree()) {
+                if (isExistingUser()) {
+                    //Account information is cache so that user need to login only once
+                    storeToSharedPreference(loginViewModal.getAccount());
+                    //validated user
+                    startHomeActivity();
+                }
+                else
+                    //new user
+                    startSignUpActivity();
+            }
+        }
+
         hideProgress();
     }
 
-    @Override
-    public void showProgress() {
+
+    private void showProgress() {
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void hideProgress() {
+
+    private void hideProgress() {
         progressBar.setVisibility(View.GONE);
     }
 
+    private boolean isExistingUser(){
+        System.out.println("isExistingUser()");
+        System.out.println(loginViewModal.getAccount());
+        return loginViewModal.getAccount().getUser()!=null;}
 
-    @Override
-    public void setError(String inputType, String message)
+
+    private void setError(ErrorType inputType, String message)
     {
-        if(inputType.equals("Username"))
+        if(inputType.equals(ErrorType.Username))
         {
             setUsernameError(message);
         }
-        else if(inputType.equals("Password"))
+        else if(inputType.equals(ErrorType.Password))
         {
             setPasswordError(message);
         }
@@ -120,15 +135,34 @@ public class LoginMainActivity extends AppCompatActivity implements LoginView, V
     }
 
     private void setUsernameError(String message) {
+        username.requestFocus();
         username.setError(message);
     }
 
-    private void setPasswordError(String message) { password.setError(message); }
+    private void setPasswordError(String message) {
+        password.requestFocus();
+        password.setError(message);
+    }
 
-    @Override
-    public void startHomeActivity() {
+
+    private void startHomeActivity() {
         startActivity(new Intent(this, HomeActivity.class));
         finish();
+    }
+
+    private boolean isErrorFree()
+    {
+        if(!loginViewModal.getErrorMessages().isEmpty())
+        {
+            for (Map.Entry<ErrorType,String> entry : loginViewModal.getErrorMessages().entrySet()) {
+                setError(entry.getKey(),entry.getValue());
+            }
+
+            loginViewModal.getErrorMessages().clear();
+            return false;
+        }
+        return true;
+
     }
 
 

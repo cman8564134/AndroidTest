@@ -14,6 +14,7 @@ public class Account extends RealmObject{
     private String ID;
     @Required
     private String Password;
+
     private Person user;
 
     public Account(String id, String password)
@@ -21,13 +22,9 @@ public class Account extends RealmObject{
         this.ID=id;
         this.Password =password;
     }
+    public Account(){}
 
-    public Account(String id, String password,Person person)
-    {
-        this.ID=id;
-        this.Password =password;
-        this.user=person;
-    }
+
 
     public String getID() {
         return ID;

@@ -1,25 +1,32 @@
 package com.example.user.androidtest.Modal;
 
+import io.realm.RealmModel;
 import io.realm.RealmObject;
+import io.realm.annotations.Required;
 
 /**
  * Created by User on 26/2/2018.
  */
 
-public class Person extends RealmObject{
+public class Person  extends RealmObject{
+    @Required
     private String firstName;
+    @Required
     private String lastName;
-    private final String Type;
+    @Required
+    private String Type;
+    @Required
     private String phoneNo;
 
-    public Person(String id, String firstname, String lastname, String type,String phoneNo)
+    public Person(String firstname, String lastname, UserType type,String phoneNo)
     {
         this.firstName=firstname;
         this.lastName=lastname;
-        this.Type=type;
+        this.Type=type.name();
         this.phoneNo=phoneNo;
 
     }
+    public Person(){}
 
     public String getFirstName() {
         return firstName;
@@ -37,9 +44,11 @@ public class Person extends RealmObject{
         this.lastName = lastName;
     }
 
-    public String getType() {
-        return Type;
+    public UserType getType() {
+        return UserType.valueOf(Type);
     }
+
+    public void setType(UserType userType) {this.Type=userType.name();}
 
     public String getPhoneNo() {
         return phoneNo;
