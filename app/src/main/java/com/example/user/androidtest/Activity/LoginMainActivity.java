@@ -61,7 +61,7 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
     }
 
 
-    public void startSignUpActivity()
+    private void startSignUpActivity()
     {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);

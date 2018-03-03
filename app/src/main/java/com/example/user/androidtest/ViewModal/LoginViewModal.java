@@ -9,6 +9,7 @@ import android.widget.Switch;
 
 import com.example.user.androidtest.Activity.SignUpActivity;
 import com.example.user.androidtest.Modal.Account;
+import com.example.user.androidtest.Modal.Database;
 import com.example.user.androidtest.Modal.Person;
 import com.example.user.androidtest.Modal.UserType;
 
@@ -17,8 +18,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.realm.Realm;
-import io.realm.RealmQuery;
 
 /**
  * Created by User on 26/2/2018.
@@ -30,15 +29,16 @@ public class LoginViewModal {
     //implement singleton to ensure data sharing with activities
     private static LoginViewModal loginViewModal;
     private Account account;
-    private Realm realm =Realm.getDefaultInstance();
     private final String passwordErrorMessage="Password should contain one special character and minimum 8 characters required";
     private final String IDErrorMessage="Email is not valid";
-    private HashMap<ErrorType,String> errorMessages=new HashMap<>();
+    private static HashMap<ErrorType,String> errorMessages;
 
     private LoginViewModal(){}
     public static LoginViewModal getInstance()
     {
+
         if (loginViewModal == null) {
+            errorMessages=new HashMap<>();
             loginViewModal = new LoginViewModal();
         }
         return loginViewModal;
@@ -63,10 +63,11 @@ public class LoginViewModal {
             if (p!=null) {
                 System.out.println("Account is:"+account);
                 account.setUser(p);
-                registerOrUpdateAccount(account);
+                getDatabaseInstance().registerOrUpdateAccount(account);
                 return;
             }
-            setError(ErrorType.UserType, "Please choose one of the selected user type");
+            else
+                setError(ErrorType.UserType, "Please choose one of the selected user type");
 
         }
 
@@ -77,8 +78,29 @@ public class LoginViewModal {
         return UserType.values();
     }
 
+    public Account getAccount()
+    {
+        return this.account;
+    }
 
-    private Person createPersonObject(String userType,String firstName,String lastName,String phoneNumber)
+    public void updatePhoneNumber(String phoneNo)
+    {
+        if(isValidPhoneNumber(phoneNo))
+        {
+            //actually this function can be used as update account details
+            account.setUser(new Person(account.getUser().getFirstName(),account.getUser().getLastName(),account.getUser().getType(),phoneNo));
+            getDatabaseInstance().registerOrUpdateAccount(account);
+        }
+
+    }
+
+    public HashMap<ErrorType, String> getErrorMessages() {
+        return errorMessages;
+    }
+
+    //codes after this should be made private but for unit testing purpose is made public
+
+    public Person createPersonObject(String userType,String firstName,String lastName,String phoneNumber)
     {
         Person p;
         switch(userType)
@@ -97,11 +119,12 @@ public class LoginViewModal {
         return p;
     }
 
+
+
     private void checkDatabase(Account acc)
     {
-        Account specificPerson = realm.where(Account.class)
-                .equalTo("ID", acc.getID())
-                .findFirst();
+
+        Account specificPerson =getDatabaseInstance().getAccount(acc);
 
         if(specificPerson!=null) {
             //existing ID
@@ -110,7 +133,8 @@ public class LoginViewModal {
                 setError(ErrorType.Password, "Wrong Password");
                 return;
             }
-            account.setUser(specificPerson.getUser());
+            else
+                account.setUser(specificPerson.getUser());
         }
         else
         {
@@ -123,7 +147,7 @@ public class LoginViewModal {
     }
 
 
-    private boolean isValidInput(String username,String password)
+    public boolean isValidInput(String username,String password)
     {
 
         if(!isValidEmail(username))
@@ -136,12 +160,13 @@ public class LoginViewModal {
             setError(ErrorType.Password,passwordErrorMessage);
             return false;
         }
-        return true;
+        else
+            return true;
 
 
     }
 
-    private boolean isValidPassword(String password)
+    public boolean isValidPassword(String password)
     {
         if(password.length()<8)
             return false;
@@ -149,7 +174,8 @@ public class LoginViewModal {
         {
             return false;
         }
-        return true;
+        else
+            return true;
 
     }
 
@@ -163,8 +189,11 @@ public class LoginViewModal {
         return matcher.matches();
     }
 
-    private boolean isValidEmail(CharSequence target) {
-        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    public boolean isValidEmail(CharSequence target) {
+        if (target!=null)
+            return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+        else
+            return false;
     }
 
 
@@ -174,15 +203,9 @@ public class LoginViewModal {
     }
 
 
-    public HashMap<ErrorType, String> getErrorMessages() {
-        return errorMessages;
-    }
 
 
-    public Account getAccount()
-    {
-        return this.account;
-    }
+
 
     private boolean isValidPhoneNumber(String phonenumber)
     {
@@ -190,33 +213,15 @@ public class LoginViewModal {
             setError(ErrorType.PhoneNo,"Phone Number Not valid");
             return false;
         }
-
-
-        return true;
-
-    }
-
-    public void updatePhoneNumber(String phoneNo)
-    {
-        if(isValidPhoneNumber(phoneNo))
-        {
-
-            //actually this function can be used as update account details
-            account.setUser(new Person(account.getUser().getFirstName(),account.getUser().getLastName(),account.getUser().getType(),phoneNo));
-            registerOrUpdateAccount(account);
-        }
+        else
+            return true;
 
     }
 
-    private void registerOrUpdateAccount(final Account account)
+
+
+    private Database getDatabaseInstance()
     {
-
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.copyToRealmOrUpdate(account);
-            }
-        });
-
+        return Database.getInstance();
     }
 }

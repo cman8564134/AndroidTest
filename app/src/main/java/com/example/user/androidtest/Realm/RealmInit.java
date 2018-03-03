@@ -13,12 +13,17 @@ public class RealmInit extends Application{
         @Override
         public void onCreate() {
             super.onCreate();
-            Realm.init(this);
-            RealmConfiguration config = new RealmConfiguration
-                    .Builder()
-                    .deleteRealmIfMigrationNeeded()
-                    .build();
-            Realm.setDefaultConfiguration(config);
+            initRealm();
+
         }
+
+    protected void initRealm() {
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration
+                .Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
+    }
 
 }

@@ -27,12 +27,12 @@ public class Account extends RealmObject{
 
 
     public String getID() {
-        return ID;
+        return this.ID;
     }
 
     public Person getUser()
     {
-        return user;
+        return this.user;
     }
 
     public void setID(String ID) {
@@ -40,7 +40,7 @@ public class Account extends RealmObject{
     }
 
     public String getPassword() {
-        return Password;
+        return this.Password;
     }
 
     public void setPassword(String password) {
