@@ -165,7 +165,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         startActivity(new Intent(this, LoginMainActivity.class));
         finishAffinity();
     }
-    
+
     //utility function to help show toast messages
     public void showToast(String message)
     {

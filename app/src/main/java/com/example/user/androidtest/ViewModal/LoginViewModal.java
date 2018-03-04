@@ -150,7 +150,7 @@ public class LoginViewModal {
             //existing ID
             //check password
             if(!specificPerson.getPassword().equals(acc.getPassword())) {
-                setError(ErrorType.Password, "Wrong Password");
+                setError(ErrorType.Password, "Wrong Password or Email already exist");
                 return;
             }
             else
