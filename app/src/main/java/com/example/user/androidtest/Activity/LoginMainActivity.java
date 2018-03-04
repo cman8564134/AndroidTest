@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 
-import com.example.user.androidtest.Modal.Account;
 import com.example.user.androidtest.R;
 import com.example.user.androidtest.ViewModal.ErrorType;
 import com.example.user.androidtest.ViewModal.LoginViewModal;
@@ -41,12 +40,12 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    private void storeToSharedPreference(Account account)
+    private void storeToSharedPreference(String[] account)
     {
         SharedPreferences prefs = getSharedPreferences("UserAccountData", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("username", account.getID());
-        editor.putString("password", account.getPassword());
+        editor.putString("username", account[0]);
+        editor.putString("password", account[1]);
         editor.commit();
     }
 
@@ -92,7 +91,7 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
             if(isErrorFree()) {
                 if (isExistingUser()) {
                     //Account information is cache so that user need to login only once
-                    storeToSharedPreference(loginViewModal.getAccount());
+                    storeToSharedPreference(new String[]{loginViewModal.getAccount().getID(),loginViewModal.getAccount().getPassword()});
                     //validated user
                     startHomeActivity();
                 }

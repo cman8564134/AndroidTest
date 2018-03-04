@@ -1,10 +1,12 @@
 package com.example.user.androidtest;
 
 
+import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
+import com.example.user.androidtest.Activity.HomeActivity;
 import com.example.user.androidtest.Activity.LoginMainActivity;
 
 
@@ -91,6 +93,16 @@ public class LoginUITest {
         onView(withId(R.id.loginButton)).perform(click());
         onView(withId(R.id.passText)).check(matches(hasErrorText("Password should contain one special character and minimum 8 characters required")));
     }
+
+    @Test
+    public void sucessfulNavigation()
+    {
+        onView(withId(R.id.loginText)).perform(typeText("asd@gman.com"));
+        onView(withId(R.id.passText)).perform(typeText("123456789!@#"));
+        onView(withId(R.id.loginButton)).perform(click());
+        onView(withId(R.id.SignUpButton)).check(matches(withText("SignUp")));
+    }
+
 
 
 }

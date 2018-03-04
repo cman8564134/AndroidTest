@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.CountDownTimer;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.user.androidtest.Modal.Account;
 import com.example.user.androidtest.R;
 import com.example.user.androidtest.ViewModal.ErrorType;
 import com.example.user.androidtest.ViewModal.LoginViewModal;
@@ -76,14 +76,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         loginViewModal= LoginViewModal.getInstance();
     }
 
-    private Account getUserAccountData()
+    private String[] getUserAccountData()
     {
         SharedPreferences prefs = getSharedPreferences("UserAccountData", MODE_PRIVATE);
         if(prefs.getString("username",null)!=null)
         {
             String username = prefs.getString("username","");
             String pwd = prefs.getString("password","");
-            return new Account(username,pwd);
+            return new String[]{username,pwd};
         }
         return null;
 
@@ -104,10 +104,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         finish();
     }
 
-    private boolean validateLogin(Account account)
+    private boolean validateLogin(String[] account)
     {
         if(account!=null) {
-            loginViewModal.validateLogin(account.getID(), account.getPassword());
+            loginViewModal.validateLogin(account[0], account[1]);
 
             if(isErrorFree())
                 return true;
@@ -118,7 +118,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setError(ErrorType inputType, String message)
     {
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        showToast(message);
     }
 
     private void createSignOutDialog() {
@@ -207,8 +207,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         loginViewModal.updatePhoneNumber(input.getText().toString().trim());
-                        if(isErrorFree())
+                        if(isErrorFree()) {
                             updateUIValues();
+                            showSnackBar("Number Edit Successful!");
+                        }
                     }
                 });
 
@@ -245,7 +247,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
 
             case R.id.userTypeButton:
-                Toast.makeText(this, "Your account type is: "+loginViewModal.getAccount().getUser().getType().toString(), Toast.LENGTH_SHORT).show();
+                showToast("Your account type is: "+loginViewModal.getAccount().getUser().getType().toString());
                 break;
 
             case R.id.editPhoneNumberButton:
@@ -260,5 +262,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
 
+    }
+
+    public void showToast(String message)
+    {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void showSnackBar(String message)
+    {
+
+        Snackbar.make(findViewById(R.id.HomeLayout), message, Snackbar.LENGTH_SHORT).show();
     }
 }

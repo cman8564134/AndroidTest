@@ -12,8 +12,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.user.androidtest.Modal.Account;
-import com.example.user.androidtest.Modal.UserType;
 import com.example.user.androidtest.R;
 import com.example.user.androidtest.ViewModal.ErrorType;
 import com.example.user.androidtest.ViewModal.LoginViewModal;
@@ -47,10 +45,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.SignUpButton).setOnClickListener(this);
 
         userType= (Spinner) findViewById(R.id.userTypeSpinner);
-        userType.setAdapter(new ArrayAdapter<UserType>(this, android.R.layout.simple_spinner_item, loginViewModal.getUserType()));
+        userType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, loginViewModal.getUserType()));
         firstName.requestFocus();
 
     }
+
     private void initViewModal()
     {
         loginViewModal = LoginViewModal.getInstance();
@@ -65,7 +64,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
             if (isErrorFree()) {
                 //cache user information
-                storeToSharedPreference(loginViewModal.getAccount());
+                storeToSharedPreference(new String[]{loginViewModal.getAccount().getID(),loginViewModal.getAccount().getPassword()});
                 //navigate to Homepage
                 startHomeActivity();
             }
@@ -87,12 +86,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    private void storeToSharedPreference(Account account)
+    private void storeToSharedPreference(String[] account)
     {
         SharedPreferences prefs = getSharedPreferences("UserAccountData", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("username", account.getID());
-        editor.putString("password", account.getPassword());
+        editor.putString("username", account[0]);
+        editor.putString("password", account[1]);
         editor.commit();
     }
 

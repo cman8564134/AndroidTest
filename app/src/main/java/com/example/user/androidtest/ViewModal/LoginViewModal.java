@@ -3,6 +3,8 @@ package com.example.user.androidtest.ViewModal;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModel;
 import android.databinding.BaseObservable;
+import android.provider.ContactsContract;
+import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.Switch;
@@ -31,31 +33,33 @@ public class LoginViewModal {
     private Account account;
     private final String passwordErrorMessage="Password should contain one special character and minimum 8 characters required";
     private final String IDErrorMessage="Email is not valid";
-    private static HashMap<ErrorType,String> errorMessages;
+    private HashMap<ErrorType,String> errorMessages=new HashMap<>();
+    private Database database= new Database();
 
-    private LoginViewModal(){}
-    public static LoginViewModal getInstance()
-    {
+    @VisibleForTesting
+    protected LoginViewModal(){}
+
+
+    public static LoginViewModal getInstance(){
 
         if (loginViewModal == null) {
-            errorMessages=new HashMap<>();
             loginViewModal = new LoginViewModal();
         }
         return loginViewModal;
     }
 
-    public void validateLogin(String username,String password)
-    {
+
+
+    public void validateLogin(String username,String password){
 
         if(isValidInput(username,password))
         {
-            account=new Account(username,password);
+            setAccount(new Account(username,password));
             checkDatabase(account);
         }
     }
 
-    public void Register(String userType,String firstName, String lastName, String phoneNumber)
-    {
+    public void Register(String userType,String firstName, String lastName, String phoneNumber){
         if(isValidPhoneNumber(phoneNumber))
         {
             Person p= createPersonObject(userType,firstName,lastName,phoneNumber);
@@ -63,7 +67,7 @@ public class LoginViewModal {
             if (p!=null) {
                 System.out.println("Account is:"+account);
                 account.setUser(p);
-                getDatabaseInstance().registerOrUpdateAccount(account);
+                this.database.registerOrUpdateAccount(account);
                 return;
             }
             else
@@ -78,6 +82,7 @@ public class LoginViewModal {
         return UserType.values();
     }
 
+    public void setAccount (Account account) {this.account=account;}
     public Account getAccount()
     {
         return this.account;
@@ -89,7 +94,7 @@ public class LoginViewModal {
         {
             //actually this function can be used as update account details
             account.setUser(new Person(account.getUser().getFirstName(),account.getUser().getLastName(),account.getUser().getType(),phoneNo));
-            getDatabaseInstance().registerOrUpdateAccount(account);
+            this.database.registerOrUpdateAccount(account);
         }
 
     }
@@ -100,7 +105,8 @@ public class LoginViewModal {
 
     //codes after this should be made private but for unit testing purpose is made public
 
-    public Person createPersonObject(String userType,String firstName,String lastName,String phoneNumber)
+    @VisibleForTesting
+    Person createPersonObject(String userType,String firstName,String lastName,String phoneNumber)
     {
         Person p;
         switch(userType)
@@ -120,11 +126,11 @@ public class LoginViewModal {
     }
 
 
-
-    private void checkDatabase(Account acc)
+    @VisibleForTesting
+    void checkDatabase(Account acc)
     {
 
-        Account specificPerson =getDatabaseInstance().getAccount(acc);
+        Account specificPerson =this.database.getAccount(acc);
 
         if(specificPerson!=null) {
             //existing ID
@@ -146,8 +152,8 @@ public class LoginViewModal {
 
     }
 
-
-    public boolean isValidInput(String username,String password)
+    @VisibleForTesting
+    boolean isValidInput(String username,String password)
     {
 
         if(!isValidEmail(username))
@@ -166,20 +172,17 @@ public class LoginViewModal {
 
     }
 
-    public boolean isValidPassword(String password)
+    @VisibleForTesting
+    boolean isValidPassword(String password)
     {
-        if(password.length()<8)
+        if(password.length()<8||!isValidPattern(password))
             return false;
-        else if (!isValidPattern(password))
-        {
-            return false;
-        }
         else
             return true;
 
     }
-
-    private boolean isValidPattern(String password) {
+    @VisibleForTesting
+    boolean isValidPattern(String password) {
 
         Pattern pattern;
         Matcher matcher;
@@ -189,25 +192,22 @@ public class LoginViewModal {
         return matcher.matches();
     }
 
-    public boolean isValidEmail(CharSequence target) {
+    @VisibleForTesting
+    boolean isValidEmail(CharSequence target) {
         if (target!=null)
             return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
         else
             return false;
     }
 
-
-    private void setError(ErrorType type, String message) {
+    @VisibleForTesting
+    void setError(ErrorType type, String message) {
         errorMessages.put(type,message);
 
     }
 
-
-
-
-
-
-    private boolean isValidPhoneNumber(String phonenumber)
+    @VisibleForTesting
+    boolean isValidPhoneNumber(String phonenumber)
     {
         if(!Patterns.PHONE.matcher(phonenumber).matches()||phonenumber.length()!=10||!phonenumber.startsWith("01")) {
             setError(ErrorType.PhoneNo,"Phone Number Not valid");
@@ -218,10 +218,4 @@ public class LoginViewModal {
 
     }
 
-
-
-    private Database getDatabaseInstance()
-    {
-        return Database.getInstance();
-    }
 }

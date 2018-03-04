@@ -15,7 +15,7 @@ public class DatabaseTest {
     @Before
     public void setup() throws Exception
     {
-        database=Database.getInstance();
+        database=new Database();
     }
     @Test
     public void getInstance() throws Exception {

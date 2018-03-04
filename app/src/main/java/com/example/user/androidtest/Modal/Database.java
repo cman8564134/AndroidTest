@@ -8,25 +8,18 @@ import io.realm.Realm;
 
 public class Database {
 
-    private static Realm realm;
 
-    private static Database database;
-    protected Database(){}
+    public Database(){}
 
-    public static Database getInstance()
-    {
-        if(database==null) {
-            database = new Database();
-            realm=Realm.getDefaultInstance();
-        }
-        return database;
-    }
+
+
 
     public boolean registerOrUpdateAccount(final Account account)
     {
 
         try {
-            realm.executeTransaction(new Realm.Transaction() {
+
+            Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
                     realm.copyToRealmOrUpdate(account);
@@ -44,7 +37,7 @@ public class Database {
 
     public Account getAccount(Account account)
     {
-        Account specificPerson = realm.where(Account.class)
+        Account specificPerson = Realm.getDefaultInstance().where(Account.class)
                 .equalTo("ID", account.getID())
                 .findFirst();
 
