@@ -25,10 +25,11 @@ import java.util.regex.Pattern;
  * Created by User on 26/2/2018.
  */
 
-
+//the intermediatory between the views and the models
+    //holds all the functional logic of the application
 public class LoginViewModal {
 
-    //implement singleton to ensure data sharing with activities
+
     private static LoginViewModal loginViewModal;
     private Account account;
     private final String passwordErrorMessage="Password should contain one special character and minimum 8 characters required";
@@ -36,10 +37,10 @@ public class LoginViewModal {
     private HashMap<ErrorType,String> errorMessages=new HashMap<>();
     private Database database= new Database();
 
-    @VisibleForTesting
+
     protected LoginViewModal(){}
 
-
+    //implement singleton to ensure data sharing between activities
     public static LoginViewModal getInstance(){
 
         if (loginViewModal == null) {
@@ -50,6 +51,7 @@ public class LoginViewModal {
 
 
 
+    //validate the login by validating input, checking the database for existing users and comparing the account details such as ID and password
     public void validateLogin(String username,String password){
 
         if(isValidInput(username,password))
@@ -59,24 +61,32 @@ public class LoginViewModal {
         }
     }
 
+    //register the user with the data provided by user after validating it
     public void Register(String userType,String firstName, String lastName, String phoneNumber){
-        if(isValidPhoneNumber(phoneNumber))
-        {
-            Person p= createPersonObject(userType,firstName,lastName,phoneNumber);
 
-            if (p!=null) {
-                System.out.println("Account is:"+account);
-                account.setUser(p);
-                this.database.registerOrUpdateAccount(account);
-                return;
+        //fail save: incase user is able to enter registration without going through login
+        if(account!=null&&account.getID()!=null) {
+            //cehck whether phone number is valid
+            if (isValidPhoneNumber(phoneNumber)) {
+                Person p = createPersonObject(userType, firstName, lastName, phoneNumber);
+
+                if (p != null) {
+                    System.out.println("Account is:" + account);
+                    account.setUser(p);
+                    this.database.registerOrUpdateAccount(account);
+                    return;
+                }
+                else
+                    setError(ErrorType.UserType, "Please choose one of the selected user type");
+
             }
-            else
-                setError(ErrorType.UserType, "Please choose one of the selected user type");
-
         }
+        else
+            setError(ErrorType.Username, "Account Information in incomplete");
 
     }
 
+    //returns the values of the possible user type to fill in data for spinner
     public UserType[] getUserType()
     {
         return UserType.values();
@@ -88,23 +98,26 @@ public class LoginViewModal {
         return this.account;
     }
 
+    //update user's phone number after validating it
     public void updatePhoneNumber(String phoneNo)
     {
         if(isValidPhoneNumber(phoneNo))
         {
-            //actually this function can be used as update account details
+
             account.setUser(new Person(account.getUser().getFirstName(),account.getUser().getLastName(),account.getUser().getType(),phoneNo));
             this.database.registerOrUpdateAccount(account);
         }
 
     }
 
+
     public HashMap<ErrorType, String> getErrorMessages() {
         return errorMessages;
     }
 
-    //codes after this should be made private but for unit testing purpose is made public
 
+
+    //create a person object whenever neccessary eg signup/login
     @VisibleForTesting
     Person createPersonObject(String userType,String firstName,String lastName,String phoneNumber)
     {
@@ -126,6 +139,7 @@ public class LoginViewModal {
     }
 
 
+    //check database whether it has existing account and compare the account details
     @VisibleForTesting
     void checkDatabase(Account acc)
     {
@@ -152,6 +166,7 @@ public class LoginViewModal {
 
     }
 
+    //validate the account details
     @VisibleForTesting
     boolean isValidInput(String username,String password)
     {
@@ -172,6 +187,7 @@ public class LoginViewModal {
 
     }
 
+    //password validation
     @VisibleForTesting
     boolean isValidPassword(String password)
     {
@@ -181,6 +197,8 @@ public class LoginViewModal {
             return true;
 
     }
+
+    //password pattern validation eg 8 character with special character included
     @VisibleForTesting
     boolean isValidPattern(String password) {
 
@@ -192,6 +210,7 @@ public class LoginViewModal {
         return matcher.matches();
     }
 
+    //validate email
     @VisibleForTesting
     boolean isValidEmail(CharSequence target) {
         if (target!=null)
@@ -200,12 +219,14 @@ public class LoginViewModal {
             return false;
     }
 
+    //compile error messages so that UI can retrieve after execution (observer replacement)
     @VisibleForTesting
     void setError(ErrorType type, String message) {
         errorMessages.put(type,message);
 
     }
 
+    //phone number validation
     @VisibleForTesting
     boolean isValidPhoneNumber(String phonenumber)
     {

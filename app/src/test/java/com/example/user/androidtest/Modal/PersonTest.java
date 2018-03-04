@@ -8,6 +8,8 @@ import static org.junit.Assert.*;
 /**
  * Created by User on 3/3/2018.
  */
+
+//unit testing for person class
 public class PersonTest {
 
     private Person person;

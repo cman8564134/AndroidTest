@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.user.androidtest.R;
 import com.example.user.androidtest.ViewModal.ErrorType;
@@ -55,6 +56,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         loginViewModal = LoginViewModal.getInstance();
     }
 
+    @Override
     public void onClick(View v) {
 
         if(isValidForm()) {
@@ -72,6 +74,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    //check whether form has any require field that is empty
     private boolean isValidForm()
     {
         if(     firstName.getText().toString().trim().isEmpty()||
@@ -86,6 +89,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    //cache account data after successful sign up
     private void storeToSharedPreference(String[] account)
     {
         SharedPreferences prefs = getSharedPreferences("UserAccountData", MODE_PRIVATE);
@@ -95,7 +99,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         editor.commit();
     }
 
-   public void setError(ErrorType type, String message) {
+    //set error messages according to error type
+   private void setError(ErrorType type, String message) {
         if(type.equals(ErrorType.PhoneNo))
         {
             setPhoneNoError(message);
@@ -104,25 +109,41 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         {
             setUserTypeError(message);
         }
+        else if(type.equals(ErrorType.Username))
+        {
+            setUsernameError(message);
+        }
     }
 
+    //set phone number error according to the error message
     private void setPhoneNoError(String message)
     {
         phoneNumber.requestFocus();
         phoneNumber.setError(message);
     }
 
+    //set phone number error according to the error message
+    private void setUsernameError(String message)
+    {
+        showToast("Please Re-login");
+        startLoginActivity();
+
+    }
+
+    //set user type error according to the error message
     private void setUserTypeError(String message)
     {   userType.requestFocus();
         ((TextView)userType.getSelectedView()).setError(message);
     }
 
 
-    public void startHomeActivity() {
+    //navigate to home activity after successful signup
+    private void startHomeActivity() {
         startActivity(new Intent(this, HomeActivity.class));
         finishAffinity();
     }
 
+    //check whether there is any error at viewmodel after execution (observer replacement)
     private boolean isErrorFree()
     {
         if(!loginViewModal.getErrorMessages().isEmpty())
@@ -136,5 +157,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
         return true;
 
+    }
+
+    //utility function to help show toast messages
+    public void showToast(String message)
+    {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    //start login activity if there is an error with account
+    private void startLoginActivity()
+    {
+        startActivity(new Intent(this, LoginMainActivity.class));
+        finish();
     }
 }

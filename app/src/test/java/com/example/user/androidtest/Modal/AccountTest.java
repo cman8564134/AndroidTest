@@ -9,6 +9,8 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by User on 3/3/2018.
  */
+
+//unit testing for Account class
 public class AccountTest {
     private Account account;
 

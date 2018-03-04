@@ -6,14 +6,10 @@ import io.realm.Realm;
  * Created by User on 3/3/2018.
  */
 
+//database class to simulate a database in an application to save/delete/update to Realm database
 public class Database {
 
-
     public Database(){}
-
-
-
-
     public boolean registerOrUpdateAccount(final Account account)
     {
 

@@ -20,9 +20,6 @@ import com.example.user.androidtest.R;
 import com.example.user.androidtest.ViewModal.ErrorType;
 import com.example.user.androidtest.ViewModal.LoginViewModal;
 
-import org.w3c.dom.Text;
-
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -59,6 +56,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    //function to initialise views
     private void initView()
     {
         email=(TextView) findViewById(R.id.emailText);
@@ -71,11 +69,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    //function to initialise the viewmodal
     private void initViewModal()
     {
         loginViewModal= LoginViewModal.getInstance();
     }
 
+    //retrieve account data from shared preferences if exist
     private String[] getUserAccountData()
     {
         SharedPreferences prefs = getSharedPreferences("UserAccountData", MODE_PRIVATE);
@@ -89,6 +89,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    //update the values in the Activity when there is an update at the repository
     private void updateUIValues()
     {
         email.setText(loginViewModal.getAccount().getID());
@@ -96,14 +97,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         lastName.setText(loginViewModal.getAccount().getUser().getLastName());
         phoneNo.setText(loginViewModal.getAccount().getUser().getPhoneNo());
     }
+
+    //start login activity if this is new user
     private void startLoginActivity()
     {
-        //login redirect
-        startActivity(new Intent(this, LoginMainActivity.class));
 
+        startActivity(new Intent(this, LoginMainActivity.class));
         finish();
     }
 
+    //after getting cached account data, relogin using the saved ID and password
     private boolean validateLogin(String[] account)
     {
         if(account!=null) {
@@ -116,12 +119,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    //show user error message(can be further splitted into error type but it was not needed in this case)
     private void setError(ErrorType inputType, String message)
     {
         showToast(message);
     }
 
-    private void createSignOutDialog() {
+    //create and show dialog box after user click sign out
+    private void showSignOutDialog() {
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Sign Out")
@@ -148,7 +153,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         defaultButton.setText(String.format(
                                 Locale.getDefault(), "%s (%d)",
                                 positiveButtonText,
-                                TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) + 1 //add one so it never displays zero
+                                TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) + 1
                         ));
                     }
                     @Override
@@ -165,6 +170,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
     }
 
+    //used to restart the app after signout (to show the splash screen)
     private void restartApp()
     {
         try {
@@ -179,6 +185,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         finish();
     }
 
+    //remove cached account data after sign out so that the same data would not be saved in the cache
     private void removeAccountData()
     {
 
@@ -188,6 +195,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         editor.commit();
     }
 
+    //show a dialog box for user to edit their phone number
     private void showEditPhoneDialogBox()
     {
 
@@ -224,6 +232,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         alertDialog.show();
     }
 
+    //check whether there is an error at the viewmodel (observer replacement)
     private boolean isErrorFree()
     {
         if(!loginViewModal.getErrorMessages().isEmpty())
@@ -240,8 +249,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -255,7 +262,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.LogoutButton:
-                createSignOutDialog();
+                showSignOutDialog();
                 break;
 
             default:
@@ -264,11 +271,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    //utility function to help show toast messages
     public void showToast(String message)
     {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    //utility function to help show snackbar messages
     public void showSnackBar(String message)
     {
 

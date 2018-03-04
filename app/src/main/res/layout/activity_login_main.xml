@@ -23,7 +23,7 @@
                 android:layout_marginStart="8dp"
                 android:drawableLeft="@drawable/ic_action_account"
                 android:ems="10"
-                android:hint="@string/user_id"
+                android:hint="@string/emailAdd"
                 android:inputType="textPersonName"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:layout_editor_absoluteY="137dp" />

@@ -22,6 +22,7 @@ import static org.mockito.Mockito.verify;
  * Created by User on 3/3/2018.
  */
 
+//unit testing for Viewmodal class but only tested whether the actual function is called in the object because Mockito does not support static classes
 @RunWith(MockitoJUnitRunner.class)
 public class LoginViewModalTest {
 
@@ -30,12 +31,6 @@ public class LoginViewModalTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-
-    @BeforeClass
-    public static void setup()
-    {
-
-    }
 
 
     @Test
@@ -48,7 +43,6 @@ public class LoginViewModalTest {
         //input
         String email="asd@hotmail.com";
         String pass="123456789!@#";
-
 
         loginViewModal.validateLogin(email,pass);
         //verification
@@ -66,7 +60,6 @@ public class LoginViewModalTest {
         String lastName="fgh";
         String phoneNumber= "0123456789";
 
-
         loginViewModal.Register(type,firstname,lastName,phoneNumber);
         //verification
         verify(loginViewModal).Register(type,firstname,lastName,phoneNumber);
@@ -77,12 +70,10 @@ public class LoginViewModalTest {
 
     @Test
     public void testGetterSetterAccount() throws Exception {
-        Account a = new Account("","");
+        Account a = new Account("asd@hot.com","123456789!@#");
 
         assertNull(loginViewModal.getAccount());
-
         loginViewModal.setAccount(a);
-
         verify(loginViewModal).setAccount(a);
 
     }
@@ -111,7 +102,7 @@ public class LoginViewModalTest {
     public void testCheckDatabase() throws  Exception
     {
 
-        Account a = new Account("","");
+        Account a = new Account("asd@hot.com","123456789!@#");
         loginViewModal.checkDatabase(a);
         verify(loginViewModal).checkDatabase(a);
     }
@@ -165,8 +156,8 @@ public class LoginViewModalTest {
     @Test
     public void testSetError() throws Exception
     {
-        loginViewModal.setError(ErrorType.UserType,"");
-        verify(loginViewModal).setError(ErrorType.UserType,"");
+        loginViewModal.setError(ErrorType.UserType,"error message");
+        verify(loginViewModal).setError(ErrorType.UserType,"error message");
     }
 
 

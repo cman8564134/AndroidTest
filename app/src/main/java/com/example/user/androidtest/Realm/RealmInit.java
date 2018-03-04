@@ -9,6 +9,7 @@ import io.realm.RealmConfiguration;
  * Created by User on 27/2/2018.
  */
 
+//used to initialize realm database in the application. Only once during the lifetime of the application.
 public class RealmInit extends Application{
         @Override
         public void onCreate() {

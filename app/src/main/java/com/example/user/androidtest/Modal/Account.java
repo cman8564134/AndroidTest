@@ -8,6 +8,7 @@ import io.realm.annotations.Required;
  * Created by User on 27/2/2018.
  */
 
+//account class to simulate each account for each user.
 public class Account extends RealmObject{
 
     @PrimaryKey @Required

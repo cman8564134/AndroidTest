@@ -27,6 +27,8 @@ import static org.hamcrest.Matchers.allOf;
 /**
  * Created by User on 3/3/2018.
  */
+
+//instrumental test
 @RunWith(AndroidJUnit4.class)
 public class LoginUITest {
 
@@ -35,6 +37,7 @@ public class LoginUITest {
     public ActivityTestRule<LoginMainActivity> mActivityRule =
             new ActivityTestRule<>(LoginMainActivity.class);
 
+    //test when both field empty in login form
     @Test
     public void ensureFormValidationWork()
     {
@@ -43,6 +46,7 @@ public class LoginUITest {
                 .check(matches(isDisplayed()));
     }
 
+    //test when password field empty in login form
     @Test
     public void ensureFormValidationWork2()
     {
@@ -51,6 +55,8 @@ public class LoginUITest {
         onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("Please Complete The Form!")))
                 .check(matches(isDisplayed()));
     }
+
+    //test when ID field empty in login form
     @Test
     public void ensureFormValidationWork3()
     {
@@ -59,6 +65,8 @@ public class LoginUITest {
         onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("Please Complete The Form!")))
                 .check(matches(isDisplayed()));
     }
+
+    //test to ensure Email Validation works
     @Test
     public void ensureEmailValidationWorks()
     {
@@ -67,6 +75,8 @@ public class LoginUITest {
         onView(withId(R.id.loginButton)).perform(click());
         onView(withId(R.id.loginText)).check(matches(hasErrorText("Email is not valid")));
     }
+
+    //test to ensure Email Validation works
     @Test
     public void ensureEmailValidationWorks2()
     {
@@ -76,6 +86,7 @@ public class LoginUITest {
         onView(withId(R.id.loginText)).check(matches(hasErrorText("Email is not valid")));
     }
 
+    //test to ensure password Validation works
     @Test
     public void ensurePasswordValidationWorks()
     {
@@ -85,6 +96,7 @@ public class LoginUITest {
         onView(withId(R.id.passText)).check(matches(hasErrorText("Password should contain one special character and minimum 8 characters required")));
     }
 
+    //test to ensure password Validation works
     @Test
     public void ensurePasswordValidationWorks2()
     {
@@ -94,6 +106,7 @@ public class LoginUITest {
         onView(withId(R.id.passText)).check(matches(hasErrorText("Password should contain one special character and minimum 8 characters required")));
     }
 
+    //test to ensure login works
     @Test
     public void sucessfulNavigation()
     {

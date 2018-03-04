@@ -8,6 +8,7 @@ import io.realm.annotations.Required;
  * Created by User on 26/2/2018.
  */
 
+//person class to simulate the user object in the application
 public class Person  extends RealmObject{
     @Required
     private String firstName;

@@ -8,6 +8,8 @@ import static org.junit.Assert.*;
 /**
  * Created by User on 3/3/2018.
  */
+
+//unit testing for database class (however it is not possible YET because Realm does not support unit testing)
 public class DatabaseTest {
 
     private Database database;
