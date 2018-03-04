@@ -159,16 +159,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    //start login activity if there is an error with account
+    private void startLoginActivity()
+    {
+        startActivity(new Intent(this, LoginMainActivity.class));
+        finishAffinity();
+    }
+    
     //utility function to help show toast messages
     public void showToast(String message)
     {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    //start login activity if there is an error with account
-    private void startLoginActivity()
-    {
-        startActivity(new Intent(this, LoginMainActivity.class));
-        finish();
-    }
+
 }
